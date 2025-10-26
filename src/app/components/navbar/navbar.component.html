@@ -1,0 +1,55 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-content">
+      <div class="logo">
+        <a routerLink="/">
+          <span class="logo-icon">📚</span>
+          <span class="logo-text">E-Learn</span>
+        </a>
+      </div>
+
+      <div class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        <a routerLink="/courses" routerLinkActive="active">Courses</a>
+        <a *ngIf="authService.isAuthenticated()" routerLink="/my-courses" routerLinkActive="active">My Courses</a>
+      </div>
+
+      <div class="search-box">
+        <input 
+          type="text" 
+          placeholder="Search courses..." 
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+        >
+        <button (click)="onSearch()">🔍</button>
+      </div>
+
+      <div class="auth-buttons">
+        <ng-container *ngIf="!authService.isAuthenticated(); else loggedIn">
+          <a routerLink="/login" class="btn btn-outline">Login</a>
+          <a routerLink="/register" class="btn btn-primary">Sign Up</a>
+        </ng-container>
+        <ng-template #loggedIn>
+          <div class="user-menu">
+            <span class="user-name">{{ authService.getCurrentUser()?.name }}</span>
+            <button (click)="logout()" class="btn btn-outline">Logout</button>
+          </div>
+        </ng-template>
+      </div>
+
+      <button class="mobile-menu-btn" (click)="toggleMenu()">
+        {{ isMenuOpen ? '✕' : '☰' }}
+      </button>
+    </div>
+
+    <div class="mobile-menu" [class.active]="isMenuOpen">
+      <a routerLink="/" (click)="toggleMenu()">Home</a>
+      <a routerLink="/courses" (click)="toggleMenu()">Courses</a>
+      <a *ngIf="authService.isAuthenticated()" routerLink="/my-courses" (click)="toggleMenu()">My Courses</a>
+      <hr>
+      <a *ngIf="!authService.isAuthenticated()" routerLink="/login" (click)="toggleMenu()">Login</a>
+      <a *ngIf="!authService.isAuthenticated()" routerLink="/register" (click)="toggleMenu()">Sign Up</a>
+      <button *ngIf="authService.isAuthenticated()" (click)="logout(); toggleMenu()">Logout</button>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,86 @@
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Learn Without Limits</h1>
+        <p>Discover thousands of courses from expert instructors around the world</p>
+        <div class="hero-buttons">
+          <a routerLink="/courses" class="btn btn-primary">Explore Courses</a>
+          <a routerLink="/register" class="btn btn-outline">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories">
+    <div class="container">
+      <h2>Browse by Category</h2>
+      <div class="category-grid">
+        <div *ngFor="let category of categories" class="category-card">
+          <div class="category-icon">{{category.icon}}</div>
+          <h3>{{category.name}}</h3>
+          <p>{{category.courseCount}} courses</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Courses -->
+  <section class="featured-courses">
+    <div class="container">
+      <h2>Featured Courses</h2>
+      <div class="course-grid" *ngIf="!isLoading">
+        <div *ngFor="let course of featuredCourses" class="course-card">
+          <a [routerLink]="['/courses', course.id]">
+            <div class="course-image">
+              <img [src]="course.thumbnail" [alt]="course.title">
+              <span class="course-level">{{course.level}}</span>
+            </div>
+            <div class="course-info">
+              <h3>{{course.title}}</h3>
+              <p class="instructor">{{course.instructor}}</p>
+              <div class="course-meta">
+                <span class="rating">⭐ {{course.rating}}</span>
+                <span class="students">{{course.studentsEnrolled}} students</span>
+              </div>
+              <div class="course-footer">
+                <div class="price">
+                  <span class="current-price">${{course.price}}</span>
+                  <span *ngIf="course.originalPrice" class="original-price">${{course.originalPrice}}</span>
+                </div>
+                <span class="duration">{{course.duration}}</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div *ngIf="isLoading" class="loading">Loading courses...</div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <h3>10,000+</h3>
+          <p>Online Courses</p>
+        </div>
+        <div class="stat-item">
+          <h3>50,000+</h3>
+          <p>Active Students</p>
+        </div>
+        <div class="stat-item">
+          <h3>500+</h3>
+          <p>Expert Instructors</p>
+        </div>
+        <div class="stat-item">
+          <h3>95%</h3>
+          <p>Success Rate</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

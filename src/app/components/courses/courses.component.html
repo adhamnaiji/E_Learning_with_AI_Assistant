@@ -1,0 +1,78 @@
+<div class="courses-page">
+  <div class="container">
+    <div class="page-header">
+      <h1>All Courses</h1>
+      <p>Explore our extensive library of courses</p>
+    </div>
+
+    <div class="filters-section">
+      <div class="filter-group">
+        <label>Category:</label>
+        <select [(ngModel)]="selectedCategory" (change)="onCategoryChange()">
+          <option value="All">All Categories</option>
+          <option *ngFor="let cat of categories" [value]="cat.name">{{cat.name}}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Level:</label>
+        <select [(ngModel)]="selectedLevel" (change)="onLevelChange()">
+          <option value="All">All Levels</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+
+      <div class="filter-group search-group">
+        <label>Search:</label>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          (input)="onSearchChange()"
+          placeholder="Search courses..."
+        >
+      </div>
+    </div>
+
+    <div class="results-info">
+      <p>Showing {{filteredCourses.length}} courses</p>
+    </div>
+
+    <div class="course-grid" *ngIf="!isLoading">
+      <div *ngFor="let course of filteredCourses" class="course-card">
+        <a [routerLink]="['/courses', course.id]">
+          <div class="course-image">
+            <img [src]="course.thumbnail" [alt]="course.title">
+            <span class="course-level">{{course.level}}</span>
+          </div>
+          <div class="course-info">
+            <div class="course-category">{{course.category}}</div>
+            <h3>{{course.title}}</h3>
+            <p class="instructor">by {{course.instructor}}</p>
+            <p class="description">{{course.description}}</p>
+            <div class="course-meta">
+              <span class="rating">⭐ {{course.rating}}</span>
+              <span class="students">{{course.studentsEnrolled}} students</span>
+            </div>
+            <div class="course-footer">
+              <div class="price">
+                <span class="current-price">${{course.price}}</span>
+                <span *ngIf="course.originalPrice" class="original-price">${{course.originalPrice}}</span>
+              </div>
+              <span class="duration">⏱ {{course.duration}}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="filteredCourses.length === 0 && !isLoading" class="no-results">
+      <p>No courses found matching your criteria.</p>
+    </div>
+
+    <div *ngIf="isLoading" class="loading">
+      Loading courses...
+    </div>
+  </div>
+</div>
