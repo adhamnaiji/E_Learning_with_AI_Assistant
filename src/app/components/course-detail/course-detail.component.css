@@ -153,6 +153,15 @@
   box-shadow: 0 25px 70px rgba(0,0,0,0.35);
 }
 
+.course-thumbnail {
+  width: 90%;
+  height: 170px; /* adjust to your desired height */
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  margin: 1 auto;
+}
+
 .course-card-preview img {
   width: 100%;
   height: 220px;

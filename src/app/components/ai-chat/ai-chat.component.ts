@@ -1,9 +1,7 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RagService, ChatMessage } from '../../services/rag.service';
-import { CourseService } from '../../services/course.service';
-import { Course } from '../../models/course.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,7 +11,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './ai-chat.component.html',
   styleUrls: ['./ai-chat.component.css']
 })
-export class AiChatComponent implements OnInit, OnDestroy, OnChanges {
+export class AiChatComponent implements OnInit, OnDestroy {
   @Input() courseId?: number;
   
   messages: ChatMessage[] = [];
@@ -21,26 +19,19 @@ export class AiChatComponent implements OnInit, OnDestroy, OnChanges {
   isLoading = false;
   isOpen = false;
   private subscription?: Subscription;
-  private courseContext: string | null = null;
 
-  constructor(private ragService: RagService, private courseService: CourseService) {}
+  constructor(private ragService: RagService) {}
 
   ngOnInit(): void {
-    // ADD THIS: Verify courseId is received
     console.log('🔍 AI Chat initialized with courseId:', this.courseId);
     
     if (!this.courseId) {
       console.warn('⚠️ No courseId provided to chat widget!');
     }
 
-    // Set the active course in the RagService so it emits the right message stream
-    this.ragService.setActiveCourse(this.courseId ?? null);
-    // Prepare course context (if courseId provided)
-    if (this.courseId) {
-      this.prepareCourseContext(this.courseId);
-    }
-
+    // Subscribe to messages for this specific course
     this.subscription = this.ragService.messages$.subscribe(messages => {
+      // Filter messages for this course if needed
       this.messages = messages;
       setTimeout(() => this.scrollToBottom(), 100);
     });
@@ -50,41 +41,6 @@ export class AiChatComponent implements OnInit, OnDestroy, OnChanges {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['courseId'] && !changes['courseId'].isFirstChange()) {
-      const newId = changes['courseId'].currentValue as number | undefined;
-      console.log('🔁 AI Chat courseId changed to', newId);
-      this.ragService.setActiveCourse(newId ?? null);
-      if (newId) {
-        this.prepareCourseContext(newId);
-      } else {
-        this.courseContext = null;
-      }
-    }
-  }
-
-  private prepareCourseContext(courseId: number): void {
-    this.courseContext = null; // reset while loading
-    this.courseService.getCourseById(courseId).subscribe((course: Course | undefined) => {
-      if (course) {
-        const parts = [
-          `Title: ${course.title}`,
-          `Instructor: ${course.instructor}`,
-          `Category: ${course.category}`,
-          `Description: ${course.description}`,
-          '',
-          'Lessons:',
-          ...course.lessons.map(l => `- ${l.title}: ${l.description}`)
-        ];
-        this.courseContext = parts.join('\n');
-        console.log('🧾 Course context prepared for chat:', this.courseContext.substring(0, 200) + '...');
-      }
-    }, err => {
-      console.warn('Could not load course for context', courseId, err);
-      this.courseContext = null;
-    });
   }
 
   toggleChat(): void {
@@ -100,62 +56,36 @@ export class AiChatComponent implements OnInit, OnDestroy, OnChanges {
 
     const userMessage = this.currentMessage;
     
-    // ADD THIS: Log what's being sent
     console.log('📤 Sending message:', {
       message: userMessage,
       courseId: this.courseId,
       hasCourseId: this.courseId !== undefined
     });
 
+    // Add user message
     this.ragService.addMessage('user', userMessage, [], this.courseId);
     this.currentMessage = '';
     this.isLoading = true;
 
-    const doSend = (context: string | null) => {
-      this.ragService.sendMessage(userMessage, this.courseId, context).subscribe({
-        next: (response) => {
-          // ADD THIS: Log response
-          console.log('📥 Response received:', {
-            response: response.response.substring(0, 100) + '...',
-            sourcesCount: response.sources.length,
-            sources: response.sources
-          });
+    // Send to backend - backend has all course context already!
+    this.ragService.sendMessage(userMessage, this.courseId).subscribe({
+      next: (response) => {
+        console.log('📥 Response received:', {
+          response: response.response.substring(0, 100) + '...',
+          sourcesCount: response.sources.length,
+          sources: response.sources
+        });
 
-          this.ragService.addMessage('assistant', response.response, response.sources, this.courseId);
-          // Associate the returned conversation id with the current course so subsequent messages keep context
-          this.ragService.setConversationId(response.conversation_id, this.courseId);
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('❌ Error:', error);
-          this.ragService.addMessage('assistant', 'Sorry, I encountered an error. Please try again.');
-          this.isLoading = false;
-        }
-      });
-    };
-
-    if (this.courseId && !this.courseContext) {
-      this.courseService.getCourseById(this.courseId).subscribe((course: Course | undefined) => {
-        if (course) {
-          const parts = [
-            `Title: ${course.title}`,
-            `Instructor: ${course.instructor}`,
-            `Category: ${course.category}`,
-            `Description: ${course.description}`,
-            '',
-            'Lessons:',
-            ...course.lessons.map(l => `- ${l.title}: ${l.description}`)
-          ];
-          this.courseContext = parts.join('\n');
-        }
-        doSend(this.courseContext);
-      }, err => {
-        console.warn('Could not load course for sending context', this.courseId, err);
-        doSend(null);
-      });
-    } else {
-      doSend(this.courseContext);
-    }
+        this.ragService.addMessage('assistant', response.response, response.sources, this.courseId);
+        this.ragService.setConversationId(response.conversation_id, this.courseId);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('❌ Error:', error);
+        this.ragService.addMessage('assistant', 'Sorry, I encountered an error. Please try again.', [], this.courseId);
+        this.isLoading = false;
+      }
+    });
   }
 
   clearChat(): void {

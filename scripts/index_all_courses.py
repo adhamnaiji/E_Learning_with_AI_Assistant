@@ -1,21 +1,30 @@
 import requests
 import json
 import time
+from typing import Dict, List, Any, Optional
+
 
 # ============================================================================
-# COPY ALL YOUR COURSES FROM src/app/data/static-data.ts HERE
+# COURSES DATA
 # ============================================================================
 
 COURSES = [
-    # Course 1 - Angular
     {
         "id": 1,
         "title": "Complete Angular Developer Course",
-        "description": "Master Angular from scratch with hands-on projects and real-world applications.",
+        "description": "Master Angular from scratch with hands-on projects and real-world applications",
         "instructor": "John Smith",
+        "instructorId": 1,
         "category": "Web Development",
         "level": "Intermediate",
         "duration": "40 hours",
+        "price": 89.99,
+        "originalPrice": 149.99,
+        "thumbnail": "assets/Angular.jpg",
+        "rating": 4.8,
+        "studentsEnrolled": 15420,
+        "isFeatured": True,
+        "tags": ["Angular", "TypeScript", "Web Development"],
         "whatYouLearn": [
             "Build complete Angular applications from scratch",
             "Master Angular components, directives, and services",
@@ -29,69 +38,251 @@ COURSES = [
             "A computer with internet connection"
         ],
         "lessons": [
-            {"title": "Introduction to Angular", "duration": "15:30", "description": "Get started with Angular framework"},
-            {"title": "Components and Templates", "duration": "25:45", "description": "Learn about Angular components"},
-            {"title": "Services and Dependency Injection", "duration": "30:20", "description": "Understanding Angular services"}
+            {
+                "id": 1,
+                "title": "Introduction to Angular",
+                "duration": "15:30",
+                "videoUrl": "https://www.youtube.com/embed/3qBXWUpoPHo",
+                "description": "Get started with Angular framework",
+                "resources": [
+                    {"id": 1, "title": "Angular Setup Guide", "type": "pdf", "url": "#"},
+                    {"id": 2, "title": "Course Resources", "type": "article", "url": "#"}
+                ]
+            },
+            {
+                "id": 2,
+                "title": "Components and Templates",
+                "duration": "25:45",
+                "videoUrl": "https://www.youtube.com/embed/3qBXWUpoPHo",
+                "description": "Learn about Angular components",
+                "resources": []
+            },
+            {
+                "id": 3,
+                "title": "Services and Dependency Injection",
+                "duration": "30:20",
+                "videoUrl": "https://www.youtube.com/embed/3qBXWUpoPHo",
+                "description": "Understanding Angular services",
+                "resources": []
+            },
+            {
+                "id": 4,
+                "title": "Routing and Navigation",
+                "duration": "28:15",
+                "videoUrl": "https://www.youtube.com/embed/3qBXWUpoPHo",
+                "description": "Implement routing in Angular",
+                "resources": []
+            }
         ]
     },
-    
-    # Course 2 - React
     {
         "id": 2,
         "title": "React JS Masterclass",
-        "description": "Learn React JS with Redux, Hooks, and modern best practices.",
+        "description": "Learn React JS with Redux, Hooks, and modern best practices",
         "instructor": "Sarah Johnson",
+        "instructorId": 2,
         "category": "Web Development",
         "level": "Beginner",
         "duration": "35 hours",
+        "price": 79.99,
+        "originalPrice": 129.99,
+        "thumbnail": "assets/Reactjs.jpg",
+        "rating": 4.7,
+        "studentsEnrolled": 18200,
+        "isFeatured": True,
+        "tags": ["React", "JavaScript", "Frontend"],
         "whatYouLearn": [
             "Build modern React applications",
             "Master React Hooks and Context API",
             "State management with Redux",
-            "Build reusable components"
+            "Testing React components",
+            "Performance optimization"
         ],
         "requirements": [
             "JavaScript fundamentals",
             "Basic understanding of HTML and CSS"
         ],
         "lessons": [
-            {"title": "React Fundamentals", "duration": "20:00", "description": "Introduction to React"},
-            {"title": "React Hooks Deep Dive", "duration": "30:00", "description": "Master useState, useEffect, and custom hooks"}
+            {
+                "id": 1,
+                "title": "React Fundamentals",
+                "duration": "20:00",
+                "videoUrl": "https://www.youtube.com/embed/SqcY0GlETPk",
+                "description": "Get started with React and learn the basics",
+                "resources": [
+                    {"id": 1, "title": "React Setup Guide", "type": "pdf", "url": "#"},
+                    {"id": 2, "title": "Course Resources", "type": "article", "url": "#"}
+                ]
+            },
+            {
+                "id": 2,
+                "title": "React Hooks Deep Dive",
+                "duration": "30:00",
+                "videoUrl": "https://www.youtube.com/embed/23AeJZg4mIE",
+                "description": "Master useState, useEffect, and custom hooks",
+                "resources": []
+            }
         ]
     },
-    
-    # Course 3 - Python
     {
         "id": 3,
         "title": "Python for Data Science",
-        "description": "Master Python programming for data analysis and visualization.",
+        "description": "Master Python programming for data analysis and visualization",
         "instructor": "Michael Chen",
+        "instructorId": 3,
         "category": "Data Science",
         "level": "Beginner",
         "duration": "45 hours",
+        "price": 94.99,
+        "originalPrice": 159.99,
+        "thumbnail": "assets/python.jpg",
+        "rating": 4.9,
+        "studentsEnrolled": 22500,
+        "isFeatured": True,
+        "tags": ["Python", "Data Science", "Machine Learning"],
         "whatYouLearn": [
             "Python programming fundamentals",
             "Data analysis with Pandas and NumPy",
             "Data visualization with Matplotlib",
-            "Machine learning basics with scikit-learn"
+            "Machine learning basics with Scikit-learn",
+            "Real-world data science projects"
         ],
         "requirements": [
             "No prior programming experience needed",
             "Basic mathematics knowledge"
         ],
         "lessons": [
-            {"title": "Python Basics", "duration": "30:00", "description": "Introduction to Python programming"},
-            {"title": "Data Analysis with Pandas", "duration": "45:00", "description": "Learn data manipulation"}
+            {
+                "id": 1,
+                "title": "Python Basics",
+                "duration": "30:00",
+                "videoUrl": "https://www.youtube.com/embed/3qBXWUpoPHo",
+                "description": "Introduction to Python",
+                "resources": []
+            }
         ]
     },
-    
-    # ADD MORE COURSES HERE FROM YOUR static-data.ts
-    # Just copy-paste and convert TypeScript to Python format
+    {
+        "id": 4,
+        "title": "Machine Learning A-Z",
+        "description": "Complete hands-on machine learning tutorial with Python",
+        "instructor": "Emma Davis",
+        "instructorId": 4,
+        "category": "Machine Learning",
+        "level": "Advanced",
+        "duration": "50 hours",
+        "price": 99.99,
+        "originalPrice": 159.99,
+        "thumbnail": "assets/machine_learning.jpg",
+        "rating": 4.8,
+        "studentsEnrolled": 19800,
+        "isFeatured": True,
+        "tags": ["Machine Learning", "AI", "Python"],
+        "whatYouLearn": [
+            "Supervised and unsupervised learning",
+            "Neural networks and deep learning",
+            "Natural language processing",
+            "Computer vision projects",
+            "Model deployment"
+        ],
+        "requirements": [
+            "Python programming experience",
+            "Statistics and linear algebra basics"
+        ],
+        "lessons": [
+            {
+                "id": 1,
+                "title": "ML Introduction",
+                "duration": "25:00",
+                "videoUrl": "https://www.youtube.com/embed/3qBXWUpoPHo",
+                "description": "Getting started with ML",
+                "resources": []
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "title": "UI/UX Design Fundamentals",
+        "description": "Learn professional UI/UX design principles and tools",
+        "instructor": "David Wilson",
+        "instructorId": 5,
+        "category": "Design",
+        "level": "Beginner",
+        "duration": "30 hours",
+        "price": 74.99,
+        "originalPrice": 129.99,
+        "thumbnail": "assets/UiUx.jpg",
+        "rating": 4.6,
+        "studentsEnrolled": 12300,
+        "isFeatured": True,
+        "tags": ["UI", "UX", "Design"],
+        "whatYouLearn": [
+            "Design thinking process",
+            "User research and personas",
+            "Wireframing and prototyping",
+            "Figma and Adobe XD",
+            "Portfolio projects"
+        ],
+        "requirements": [
+            "No design experience needed",
+            "Creative mindset"
+        ],
+        "lessons": [
+            {
+                "id": 1,
+                "title": "Design Principles",
+                "duration": "18:00",
+                "videoUrl": "https://www.youtube.com/embed/3qBXWUpoPHo",
+                "description": "Core design concepts",
+                "resources": []
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "title": "Mobile App Development with Flutter",
+        "description": "Build beautiful native mobile apps with Flutter",
+        "instructor": "Lisa Anderson",
+        "instructorId": 6,
+        "category": "Mobile Development",
+        "level": "Intermediate",
+        "duration": "38 hours",
+        "price": 84.99,
+        "originalPrice": 139.99,
+        "thumbnail": "assets/Flutter.jpg",
+        "rating": 4.7,
+        "studentsEnrolled": 14500,
+        "isFeatured": True,
+        "tags": ["Flutter", "Dart", "Mobile"],
+        "whatYouLearn": [
+            "Flutter framework and Dart",
+            "Building responsive UI",
+            "State management",
+            "Firebase integration",
+            "Publishing to app stores"
+        ],
+        "requirements": [
+            "Basic programming knowledge",
+            "OOP concepts understanding"
+        ],
+        "lessons": [
+            {
+                "id": 1,
+                "title": "Flutter Basics",
+                "duration": "22:00",
+                "videoUrl": "https://www.youtube.com/embed/3qBXWUpoPHo",
+                "description": "Introduction to Flutter",
+                "resources": []
+            }
+        ]
+    }
 ]
+
 
 API_URL = "http://localhost:8000/api"
 
-def build_course_content(course):
+
+def build_course_content(course: Dict[str, Any]) -> str:
     """Build rich, searchable content for each course"""
     content_parts = [
         "=== COURSE INFORMATION ===",
@@ -136,7 +327,8 @@ def build_course_content(course):
     
     return "\n".join(content_parts)
 
-def index_course(course):
+
+def index_course(course: Dict[str, Any]) -> Dict[str, Any]:
     """Index a single course to the RAG system"""
     content = build_course_content(course)
     
@@ -161,10 +353,15 @@ def index_course(course):
             return {"success": True, "course": course}
         else:
             return {"success": False, "course": course, "error": response.text}
+    except requests.exceptions.ConnectionError:
+        return {"success": False, "course": course, "error": "Connection refused - backend not running"}
+    except requests.exceptions.Timeout:
+        return {"success": False, "course": course, "error": "Request timed out"}
     except Exception as e:
         return {"success": False, "course": course, "error": str(e)}
 
-def main():
+
+def main() -> None:
     print("=" * 80)
     print(" " * 20 + "🎓 E-LEARNING COURSE INDEXING SYSTEM 🎓")
     print("=" * 80)
@@ -201,7 +398,7 @@ def main():
         print(f"    📂 Category: {course['category']}")
         print(f"    📊 Level: {course['level']}")
         print(f"    🎥 Lessons: {len(course.get('lessons', []))}")
-        print(f"    ⏱️  Indexing...", end=" ")
+        print(f"    ⏱️  Indexing...", end=" ", flush=True)
         
         result = index_course(course)
         results.append(result)
@@ -210,11 +407,11 @@ def main():
             print("✅ SUCCESS")
             success_count += 1
         else:
-            print(f"❌ FAILED")
+            print("❌ FAILED")
             print(f"       Error: {result['error']}")
             fail_count += 1
         
-        # Small delay between requests to not overwhelm the backend
+        # Small delay between requests
         if i < len(COURSES):
             time.sleep(0.5)
     
@@ -234,7 +431,7 @@ def main():
         print("=" * 80)
         
         # Group by category
-        categories = {}
+        categories: Dict[str, List[Dict[str, Any]]] = {}
         for result in results:
             if result['success']:
                 cat = result['course']['category']
@@ -270,6 +467,7 @@ def main():
                 print(f"   Error: {result['error']}")
     
     print("\n" + "=" * 80)
+
 
 if __name__ == "__main__":
     main()
