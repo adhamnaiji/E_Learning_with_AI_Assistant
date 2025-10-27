@@ -10,9 +10,7 @@
           <p class="course-subtitle">{{course.description}}</p>
           <div class="course-stats">
             <span class="rating">⭐ {{course.rating}} Rating</span>
-            <span>{{course.studentsEnrolled}} Students</span>
-            <span>{{course.level}}</span>
-            <span>⏱ {{course.duration}}</span>
+            
           </div>
           <div class="instructor-info">
             <span>Created by <strong>{{course.instructor}}</strong></span>
@@ -52,6 +50,8 @@
       </div>
     </div>
   </div>
+<!-- Add AI Chat Widget -->
+<app-ai-chat [courseId]="course.id"></app-ai-chat>
 
   <div class="course-content">
     <div class="container">
@@ -89,23 +89,13 @@
             </div>
           </section>
 
-          <!-- What You'll Learn -->
-          <section class="section">
-            <h2>What You'll Learn</h2>
-            <div class="learn-grid">
-              <div *ngFor="let item of course.whatYouLearn" class="learn-item">
-                <span class="check">✓</span>
-                <span>{{item}}</span>
-              </div>
-            </div>
-          </section>
+         
 
           <!-- Course Content / Lessons -->
           <section class="section">
             <h2>Course Content</h2>
             <div class="course-curriculum-header">
               <span>{{course.lessons.length}} lessons</span>
-              <span>{{course.duration}} total length</span>
             </div>
             <div class="lessons-list">
               <div 
@@ -140,39 +130,11 @@
             </ul>
           </section>
 
-          <!-- Description -->
-          <section class="section">
-            <h2>About This Course</h2>
-            <p>{{course.description}}</p>
-            <div class="course-details-grid">
-              <div class="detail-item">
-                <strong>Category:</strong>
-                <span>{{course.category}}</span>
-              </div>
-              <div class="detail-item">
-                <strong>Level:</strong>
-                <span>{{course.level}}</span>
-              </div>
-              <div class="detail-item">
-                <strong>Duration:</strong>
-                <span>{{course.duration}}</span>
-              </div>
-              <div class="detail-item">
-                <strong>Students:</strong>
-                <span>{{course.studentsEnrolled}} enrolled</span>
-              </div>
-            </div>
-          </section>
+          
         </div>
 
         <div class="sidebar">
-          <!-- Tags -->
-          <div class="sidebar-section">
-            <h3>Tags</h3>
-            <div class="tags">
-              <span *ngFor="let tag of course.tags" class="tag">{{tag}}</span>
-            </div>
-          </div>
+          
 
           <!-- Instructor -->
           <div class="sidebar-section">
@@ -186,15 +148,7 @@
             </div>
           </div>
 
-          <!-- Share -->
-          <div class="sidebar-section">
-            <h3>Share This Course</h3>
-            <div class="share-buttons">
-              <button class="share-btn">📘 Facebook</button>
-              <button class="share-btn">🐦 Twitter</button>
-              <button class="share-btn">💼 LinkedIn</button>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>

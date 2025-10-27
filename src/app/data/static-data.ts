@@ -111,9 +111,9 @@ export const COURSES: Course[] = [
 lessons: [
   {
     id: 1,
-    title: 'Introduction to Angular',
+    title: 'Introduction to Reactjs',
     duration: '15:30',
-    videoUrl: 'https://www.youtube.com/embed/3qBXWUpoPHo', // Angular Tutorial
+    videoUrl: 'https://youtu.be/SqcY0GlETPk?si=SIrpY3cWYlMDeNsf', // Angular Tutorial
     description: 'Get started with Angular framework and learn the basics',
     resources: [
       { id: 1, title: 'Angular Setup Guide', type: 'pdf', url: '#' },
@@ -124,7 +124,7 @@ lessons: [
     id: 2,
     title: 'Components and Templates',
     duration: '25:45',
-    videoUrl: 'https://www.youtube.com/embed/23AeJZg4mIE', // Angular Components
+    videoUrl: 'https://www.youtube.com/embed/23AeJZg4mIE',
     description: 'Learn about Angular components and how to create dynamic templates',
     resources: []
   },
@@ -132,7 +132,7 @@ lessons: [
     id: 3,
     title: 'Services and Dependency Injection',
     duration: '30:20',
-    videoUrl: 'https://www.youtube.com/embed/0BikjL858OQ', // Angular Services
+    videoUrl: 'https://www.youtube.com/watch?v=SqcY0GlETPk', 
     description: 'Understanding Angular services and dependency injection patterns',
     resources: []
   },
@@ -140,7 +140,7 @@ lessons: [
     id: 4,
     title: 'Routing and Navigation',
     duration: '28:15',
-    videoUrl: 'https://www.youtube.com/embed/Nehk4tBxD4o', // Angular Routing
+    videoUrl: 'https://www.youtube.com/watch?v=SqcY0GlETPk',
     description: 'Implement routing and navigation in your Angular applications',
     resources: []
   }

@@ -5,11 +5,14 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CourseService } from '../../services/course.service';
 import { AuthService } from '../../services/auth.service';
 import { Course, Lesson } from '../../models/course.model';
+import { AiChatComponent } from '../ai-chat/ai-chat.component';
+
+
 
 @Component({
   selector: 'app-course-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule , AiChatComponent],
   templateUrl: './course-detail.component.html',
   styleUrls: ['./course-detail.component.css']
 })
