@@ -65,15 +65,19 @@ export class RagService {
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(message: string, courseId?: number): Observable<ChatResponse> {
+  sendMessage(message: string, courseId?: number, courseContext?: any): Observable<ChatResponse> {
     // If a courseId is provided, use the mapped conversation id for that course (if any).
     const convId = typeof courseId === 'number' ? this.conversationIds.get(courseId) ?? this.fallbackConversationId : this.fallbackConversationId;
 
-    const payload = {
+    const payload: any = {
       message: message,
       course_id: courseId,
       conversation_id: convId
     };
+
+    if (courseContext) {
+      payload.course_context = courseContext;
+    }
 
     return this.http.post<ChatResponse>(`${this.apiUrl}/chat`, payload);
   }
